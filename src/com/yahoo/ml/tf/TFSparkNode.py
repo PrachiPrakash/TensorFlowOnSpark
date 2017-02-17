@@ -1,7 +1,6 @@
 # Copyright 2017 Yahoo Inc.
 # Licensed under the terms of the Apache 2.0 license.
 # Please see LICENSE file in the project root for terms.
-
 """
 This module provides Spark-compatible functions to launch TensorFlow on the executors.
 
@@ -26,7 +25,7 @@ import platform
 import random
 import socket
 import subprocess
-import threading
+import multiprocessing
 import time
 import uuid
 from queue import Queue
@@ -208,11 +207,11 @@ def start(fn, tf_args, cluster_info, defaultFS, working_dir, background):
 
         if job_name == 'ps' or background:
             # invoke the TensorFlow main function in a background thread
-            logging.info("Starting TensorFlow {0}:{1} on cluster node {2} on background thread".format(job_name, task_index, worker_num))
-            t = threading.Thread(target=fn, args=(tf_args, ctx))
-            t.start()
+            logging.info("Starting TensorFlow {0}:{1} on cluster node {2} on background process".format(job_name, task_index, worker_num))
+            p = multiprocessing.Process(target=fn, args=(tf_args, ctx))
+            p.start()
 
-            # for ps nodes only, wait indefinitely for a "control" event (None == "stop")
+            # for ps nodes only, wait indefinitely in foreground thread for a "control" event (None == "stop")
             if job_name == 'ps':
                 queue = mgr.get_queue('control')
                 done = False
