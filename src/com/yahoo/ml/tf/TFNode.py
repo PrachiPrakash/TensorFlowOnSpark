@@ -1,10 +1,14 @@
 # Copyright 2017 Yahoo Inc.
 # Licensed under the terms of the Apache 2.0 license.
 # Please see LICENSE file in the project root for terms.
-
 """
 This module provides TensorFlow helper functions for allocating GPUs and interacting with the Spark executor.
 """
+
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import nested_scopes
+from __future__ import print_function
 
 import getpass
 import logging
@@ -37,7 +41,7 @@ def start_cluster_server(ctx, num_gpus=1, rdma=False):
   Wraps creation of TensorFlow Server in a distributed cluster.  This is intended to be invoked from the TF map_fun.
   """
   import tensorflow as tf
-  import gpu_info
+  from . import gpu_info
 
   logging.info("{0}: ======== {1}:{2} ========".format(ctx.worker_num, ctx.job_name, ctx.task_index))
   cluster_spec = ctx.cluster_spec
@@ -70,7 +74,7 @@ def start_cluster_server(ctx, num_gpus=1, rdma=False):
         else:
           server = tf.train.Server(cluster, ctx.job_name, ctx.task_index)
         gpu_initialized = True
-      except Exception, e:
+      except Exception as e:
         print(e)
         logging.error("{0}: Failed to allocate GPU, trying again...".format(ctx.worker_num))
         time.sleep(10)

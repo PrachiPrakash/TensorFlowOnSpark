@@ -2,6 +2,11 @@
 # Licensed under the terms of the Apache 2.0 license.
 # Please see LICENSE file in the project root for terms.
 
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import nested_scopes
+from __future__ import print_function
+
 import ctypes as ct
 import logging
 import platform
@@ -67,7 +72,7 @@ def get_gpus(num_gpu=1):
       logging.error("Unable to find free GPU:\n" + smi_output)
 
     return free_gpus
-  except subprocess.CalledProcessError, e:
+  except subprocess.CalledProcessError as e:
     print ("nvidia-smi error", e.output)
 
 # Function to get the gpu information

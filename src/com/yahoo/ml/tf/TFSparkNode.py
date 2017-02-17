@@ -15,6 +15,11 @@ nodes block on startup, they will not receive any RDD partitions.
 4. Shutdown - sends a shutdown control message to the multiprocessing.Managers of the PS nodes.
 """
 
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import nested_scopes
+from __future__ import print_function
+
 import logging
 import os
 import platform
@@ -24,8 +29,8 @@ import subprocess
 import threading
 import time
 import uuid
-import Queue
-import TFManager
+from queue import Queue
+from . import TFManager
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s (%(threadName)s-%(process)d) %(message)s",)
 
@@ -89,7 +94,7 @@ def reserve(cluster_spec, tensorboard, queues=['input', 'output']):
             raise Exception("TFManager already started on {0}, ppid={1}, state={2}".format(host, ppid, str(TFSparkNode.mgr.get("state"))))
         else:
             # use a random uuid as the authkey
-            authkey = uuid.uuid4()
+            authkey = uuid.uuid4().bytes
             addr = None
             if job_name == 'ps':
                 # PS nodes must be remotely accessible in order to shutdown from Spark driver.
