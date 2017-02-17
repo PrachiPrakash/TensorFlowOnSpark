@@ -28,7 +28,6 @@ import subprocess
 import multiprocessing
 import time
 import uuid
-from queue import Queue
 from . import TFManager
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s (%(threadName)s-%(process)d) %(message)s",)
